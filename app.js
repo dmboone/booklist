@@ -19,7 +19,7 @@ UI.prototype.addBookToList = function(book){
         <td>${book.title}</td>
         <td>${book.author}</td>
         <td>${book.isbn}</td>
-        <td><a href="#" ckass="delete">X</a></td>
+        <td><a href="#" class="delete">X</a></td>
     `;
 
     list.appendChild(row);
@@ -46,13 +46,21 @@ UI.prototype.showAlert = function(message, className){
     }, 3000);
 }
 
+// Delete Book
+UI.prototype.deleteBook = function(target){
+    if(target.className === 'delete'){ // if you did indeed click on the x
+        target.parentElement.parentElement.remove();
+        this.showAlert('Book Removed!', 'success'); // show message
+    }
+}
+
 UI.prototype.clearFields = function(){
     document.getElementById('title').value = '';
     document.getElementById('author').value = '';
     document.getElementById('isbn').value = '';
 }
 
-// Event Listener
+// Event Listener for add book
 document.getElementById('book-form').addEventListener('submit', 
     function(e){ // event parameter; this function calls as soon as the submit event is picked up by the event listener
         //Get form values
@@ -84,3 +92,16 @@ document.getElementById('book-form').addEventListener('submit',
 
         e.preventDefault();
     });
+
+// Event Listener for delete
+document.getElementById('book-list').addEventListener('click', function(e){ // need to grab a parent
+    // Instantiate UI
+    const ui = new UI();
+    let correctClick; // tracks to make sure you clicked on x since we attached
+                      // the event listener to the entire book list
+
+    // Delete book
+    correctClick = ui.deleteBook(e.target);
+    
+    e.preventDefault();
+});
